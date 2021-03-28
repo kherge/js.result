@@ -1,4 +1,40 @@
-*.log
-.DS_Store
-node_modules
-dist
+# Exclude everything.
+*
+
+# Except the NPM configuration.
+!/.npmrc
+
+# Except the code owners file.
+!/CODEOWNERS
+
+# Except the GitHub metadata.
+!/.github/
+!/.github/**
+
+# Except the scripts.
+!/scripts/
+!/scripts/**
+
+# Except the source code.
+!/src/
+!/src/**
+
+# Except the test code.
+!/test/
+!/test/**
+
+# Except this exclusion list.
+!/.gitignore
+
+# Except the license.
+!/LICENSE
+
+# Except the package manifest.
+!/package.json
+!/package-lock.json
+
+# Except the README.
+!/README.md
+
+# Except the TypeScript configuration.
+!/tsconfig.json

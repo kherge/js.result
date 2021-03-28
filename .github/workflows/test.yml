@@ -1,0 +1,30 @@
+name: Quality Check
+
+# Run for all commits not in master.
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  build:
+    name: Tests
+
+    # Use Ubuntu.
+    runs-on: ubuntu-latest
+
+    steps:
+      # Check out the repository.
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      # Set up node.
+      - name: Set Up Node
+        uses: actions/setup-node@v1
+        with:
+          node-version: 14
+
+      # Test the project.
+      - run: npm ci
+      - run: npm run lint
+      - run: npm test -- --ci --coverage --maxWorkers=2
