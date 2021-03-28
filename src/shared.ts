@@ -1,12 +1,12 @@
 /**
- * Computes a value of a specific type.
+ * Computes a new value for the given value.
  */
-export type Compute<T> = () => T;
+export type Compute<T, U> = (value: T) => U;
 
 /**
- * Maps a value of one type into another.
+ * Produces a value.
  */
-export type Map<T, U> = (value: T) => U;
+export type Produce<T> = () => T;
 
 /**
  * Validates an assertion on a value.

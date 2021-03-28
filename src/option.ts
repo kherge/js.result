@@ -1,4 +1,4 @@
-import { Compute, Map, Predicate } from './shared';
+import { Compute, Predicate, Produce } from './shared';
 import { Result, err, ok } from './result';
 
 /**
@@ -81,7 +81,11 @@ export interface Option<T> {
    *
    * @returns The mapped option, or `None`.
    */
-  andThen<U>(fn: Map<T, Option<U>>): Option<U>;
+  andThen<U>(fn: Compute<T, Option<U>>): Option<U>;
+
+  // todo expect
+  // todo expectNone
+  // todo flatten
 
   /**
    * Returns this option if the `predicate` returns `true`.
@@ -117,6 +121,9 @@ export interface Option<T> {
    * @returns This option or `None`.
    */
   filter(predicate: Predicate<T>): Option<T>;
+
+  // todo getOrInsert
+  // todo getOrInsertWith
 
   /**
    * Returns `true` if this option is `None`.
@@ -161,7 +168,7 @@ export interface Option<T> {
    *
    * @return The mapped option or `None`.
    */
-  map<U>(fn: Map<T, U>): Option<U>;
+  map<U>(fn: Compute<T, U>): Option<U>;
 
   /**
    * Returns the mapped value if this option is `Some`.
@@ -189,7 +196,7 @@ export interface Option<T> {
    *
    * @return The mapped or default value.
    */
-  mapOr<U>(def: U, fn: Map<T, U>): U;
+  mapOr<U>(def: U, fn: Compute<T, U>): U;
 
   /**
    * Returns the mapped value if this option is `Some`.
@@ -217,7 +224,7 @@ export interface Option<T> {
    *
    * @return The mapped or computed default value.
    */
-  mapOrElse<U>(def: Compute<U>, fn: Map<T, U>): U;
+  mapOrElse<U>(def: Produce<U>, fn: Compute<T, U>): U;
 
   /**
    * Transforms this option into `Ok<T, E>` if it is `Some.
@@ -269,7 +276,7 @@ export interface Option<T> {
    *
    * @return The result.
    */
-  okOrElse<E>(error: Compute<E>): Result<T, E>;
+  okOrElse<E>(error: Produce<E>): Result<T, E>;
 
   /**
    * Returns this option if `Some`.
@@ -321,7 +328,7 @@ export interface Option<T> {
    *
    * @returns This or the other computed option.
    */
-  orElse(other: Compute<Option<T>>): Option<T>;
+  orElse(other: Produce<Option<T>>): Option<T>;
 
   /**
    * Replaces the value in this option and returns the old one.
@@ -421,7 +428,7 @@ export interface Option<T> {
    *
    * @return The unwrapped or computed default value.
    */
-  unwrapOrElse(def: Compute<T>): T;
+  unwrapOrElse(def: Produce<T>): T;
 
   /**
    * Returns this option if `Some` and the other option is `None`.
@@ -491,7 +498,7 @@ class None<T> implements Option<T> {
     return new None();
   }
 
-  andThen<U>(_: Map<T, Option<U>>): Option<U> {
+  andThen<U>(_: Compute<T, Option<U>>): Option<U> {
     return new None();
   }
 
@@ -507,15 +514,15 @@ class None<T> implements Option<T> {
     return false;
   }
 
-  map<U>(_: Map<T, U>): Option<U> {
+  map<U>(_: Compute<T, U>): Option<U> {
     return new None();
   }
 
-  mapOr<U>(def: U, _: Map<T, U>): U {
+  mapOr<U>(def: U, _: Compute<T, U>): U {
     return def;
   }
 
-  mapOrElse<U>(def: Compute<U>, _: Map<T, U>): U {
+  mapOrElse<U>(def: Produce<U>, _: Compute<T, U>): U {
     return def();
   }
 
@@ -523,7 +530,7 @@ class None<T> implements Option<T> {
     return err(error);
   }
 
-  okOrElse<E>(error: Compute<E>): Result<T, E> {
+  okOrElse<E>(error: Produce<E>): Result<T, E> {
     return err(error());
   }
 
@@ -531,7 +538,7 @@ class None<T> implements Option<T> {
     return other;
   }
 
-  orElse(other: Compute<Option<T>>): Option<T> {
+  orElse(other: Produce<Option<T>>): Option<T> {
     return other();
   }
 
@@ -549,7 +556,7 @@ class None<T> implements Option<T> {
     return def;
   }
 
-  unwrapOrElse(def: Compute<T>): T {
+  unwrapOrElse(def: Produce<T>): T {
     return def();
   }
 
@@ -594,7 +601,7 @@ class Some<T> implements Option<T> {
     return other;
   }
 
-  andThen<U>(fn: Map<T, Option<U>>): Option<U> {
+  andThen<U>(fn: Compute<T, Option<U>>): Option<U> {
     return fn(this.value);
   }
 
@@ -614,15 +621,15 @@ class Some<T> implements Option<T> {
     return true;
   }
 
-  map<U>(fn: Map<T, U>): Option<U> {
+  map<U>(fn: Compute<T, U>): Option<U> {
     return new Some(fn(this.value));
   }
 
-  mapOr<U>(_: U, fn: Map<T, U>): U {
+  mapOr<U>(_: U, fn: Compute<T, U>): U {
     return fn(this.value);
   }
 
-  mapOrElse<U>(_: Compute<U>, fn: Map<T, U>): U {
+  mapOrElse<U>(_: Produce<U>, fn: Compute<T, U>): U {
     return fn(this.value);
   }
 
@@ -630,7 +637,7 @@ class Some<T> implements Option<T> {
     return ok(this.value);
   }
 
-  okOrElse<E>(_: Compute<E>): Result<T, E> {
+  okOrElse<E>(_: Produce<E>): Result<T, E> {
     return ok(this.value);
   }
 
@@ -638,7 +645,7 @@ class Some<T> implements Option<T> {
     return this;
   }
 
-  orElse(_: Compute<Option<T>>): Option<T> {
+  orElse(_: Produce<Option<T>>): Option<T> {
     return this;
   }
 
@@ -658,7 +665,7 @@ class Some<T> implements Option<T> {
     return this.value;
   }
 
-  unwrapOrElse(_: Compute<T>): T {
+  unwrapOrElse(_: Produce<T>): T {
     return this.value;
   }
 

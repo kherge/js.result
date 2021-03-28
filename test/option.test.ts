@@ -1,6 +1,6 @@
+import { Compute, Predicate } from '../src/shared';
 import { Option, none, some } from '../src/option';
 import { Result } from '../src/result';
-import { Map, Predicate } from '../src/shared';
 
 describe('None', () => {
   let option: Option<string>;
@@ -22,7 +22,7 @@ describe('None', () => {
   });
 
   describe('andThen()', () => {
-    let fn: Map<string, Option<boolean>>;
+    let fn: Compute<string, Option<boolean>>;
     let result: Option<boolean>;
 
     test('should never invoke the mapper and always return None', () => {
@@ -60,7 +60,7 @@ describe('None', () => {
   });
 
   describe('map()', () => {
-    let fn: Map<string, number>;
+    let fn: Compute<string, number>;
     let result: Option<number>;
 
     test('should never invoke the mapper and always return None', () => {
@@ -74,7 +74,7 @@ describe('None', () => {
 
   describe('mapOr()', () => {
     const def = 123;
-    let fn: Map<string, number>;
+    let fn: Compute<string, number>;
     let result: number;
 
     test('should never invoke the mapper and always return the default value', () => {
@@ -88,7 +88,7 @@ describe('None', () => {
 
   describe('mapOrElse()', () => {
     const def = () => 123;
-    let fn: Map<string, number>;
+    let fn: Compute<string, number>;
     let result: number;
 
     test('should never invoke the mapper and return the computed default value', () => {
@@ -108,8 +108,8 @@ describe('None', () => {
       result = option.okOr(error);
 
       expect(result.isErr()).toBe(true);
-      expect(result.error().isSome()).toBe(true);
-      expect(result.error().unwrap()).toEqual(error);
+      expect(result.err().isSome()).toBe(true);
+      expect(result.err().unwrap()).toEqual(error);
     });
   });
 
@@ -121,8 +121,8 @@ describe('None', () => {
       result = option.okOrElse(error);
 
       expect(result.isErr()).toBe(true);
-      expect(result.error().isSome()).toBe(true);
-      expect(result.error().unwrap()).toEqual(error());
+      expect(result.err().isSome()).toBe(true);
+      expect(result.err().unwrap()).toEqual(error());
     });
   });
 
@@ -242,7 +242,7 @@ describe('Some', () => {
   });
 
   describe('andThen()', () => {
-    let fn: Map<string, Option<boolean>>;
+    let fn: Compute<string, Option<boolean>>;
     let result: Option<boolean>;
 
     test('should always return the mapped option', () => {
@@ -287,7 +287,7 @@ describe('Some', () => {
   });
 
   describe('map()', () => {
-    let fn: Map<string, number>;
+    let fn: Compute<string, number>;
     let result: Option<number>;
 
     test('should always map the value', () => {
@@ -301,7 +301,7 @@ describe('Some', () => {
 
   describe('mapOr()', () => {
     const def = 123;
-    let fn: Map<string, number>;
+    let fn: Compute<string, number>;
     let result: number;
 
     test('should always map the value', () => {
@@ -314,7 +314,7 @@ describe('Some', () => {
 
   describe('mapOrElse()', () => {
     const def = () => 123;
-    let fn: Map<string, number>;
+    let fn: Compute<string, number>;
     let result: number;
 
     test('should always map the value', () => {
