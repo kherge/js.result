@@ -28,9 +28,11 @@ if ! NAME="$(jq -r .name package.json)"; then
 fi
 
 # Get the package version.
-if ! VERSION="$(jq -r .version package.json)"; then
-    echo "Could not get version from package." >&2
-    exit 1
+if ! VERSION="$(jq -r .version package.json 2>&1)"; then
+    if [[ "$VERSION" != *not in the npm registry* ]]; then
+        echo "Could not get version from package." >&2
+        exit 1
+    fi
 fi
 
 # Get latest version on NPM.
