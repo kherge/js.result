@@ -67,9 +67,31 @@ import type { Result } from "../result";
    */
   andThen<U>(fn: Compute<T, Option<U>>): Option<U>;
 
-  // todo expect
-  // todo expectNone
-  // todo flatten
+  /**
+   * Returns the value in this option if it is `Some`.
+   *
+   * ```ts
+   * let error = 'The example error message.';
+   * let option = some('example');
+   * let result = option.expect(error);
+   *
+   * assert(result === 'example');
+   * ```
+   *
+   * If this option is `None`, then an error is thrown.
+   *
+   * ```ts
+   * option = none();
+   * result = option.expect(error);
+   *
+   * // error thrown using given message
+   * ```
+   *
+   * @param message The error message.
+   *
+   * @return The value in this option.
+   */
+  expect(message: string): T;
 
   /**
    * Returns this option if the `predicate` returns `true`.
@@ -106,8 +128,66 @@ import type { Result } from "../result";
    */
   filter(predicate: Predicate<T>): Option<T>;
 
-  // todo getOrInsert
-  // todo getOrInsertWith
+  /**
+   * Returns the value in this option if `Some`.
+   *
+   * ```ts
+   * let option = some('example');
+   * let other = 'other';
+   * let result = option.getOrInsert(other);
+   *
+   * assert(result === 'example');
+   * ```
+   *
+   * If this option is `None`, this option becomes `Some` and the given value is set and returned.
+   *
+   * ```ts
+   * option = none();
+   * result = option.getOrOinsert(other);
+   *
+   * assert(result === other);
+   * assert(option.isSome() === true);
+   * assert(option.unwrap() === other);
+   * ```
+   *
+   * @param value The value to insert.
+   *
+   * @return The value in this option or the given value.
+   *
+   * @see Performance impact on {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/setPrototypeOf|MDN}.
+   */
+  getOrInsert(value: T): T;
+
+  /**
+   * Returns the value in this option if `Some`.
+   *
+   * ```ts
+   * let option = some('example');
+   * let other = () => 'other';
+   * let result = option.getOrInsertWith(other);
+   *
+   * assert(result === 'example');
+   * ```
+   *
+   * If this option is `None`, the value is produced and this option becomes `Some` with the
+   * produced value set. The produced value is then returned.
+   *
+   * ```ts
+   * option = none();
+   * result = option.getOrOinsertWith(other);
+   *
+   * assert(result === 'other');
+   * assert(option.isSome() === true);
+   * assert(option.unwrap() === other);
+   * ```
+   *
+   * @param fn The producer for value to insert.
+   *
+   * @return The value in this option or the given value.
+   *
+   * @see Performance impact on {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/setPrototypeOf|MDN}.
+   */
+  getOrInsertWith(fn: Produce<T>): T;
 
   /**
    * Returns `true` if this option is `None`.
@@ -194,7 +274,7 @@ import type { Result } from "../result";
    * assert(result.unwrap() === 7);
    * ```
    *
-   * If this option is `None`, then the default value is computed and returned.
+   * If this option is `None`, then the default value is produced and returned.
    *
    * ```ts
    * option = none();
@@ -203,10 +283,10 @@ import type { Result } from "../result";
    * assert(result.unwrap() === 456);
    * ```
    *
-   * @param def The default value computer.
+   * @param def The default value producer.
    * @param fn  The mapping function.
    *
-   * @return The mapped or computed default value.
+   * @return The mapped or default value.
    */
   mapOrElse<U>(def: Produce<U>, fn: Compute<T, U>): U;
 
@@ -247,7 +327,7 @@ import type { Result } from "../result";
    * assert(result.isOk() === true);
    * ```
    *
-   * If this option is `None`, the `Err<T, E>` is computed and returned.
+   * If this option is `None`, the `Err<T, E>` is produced and returned.
    *
    * ```ts
    * option = none();
@@ -256,7 +336,7 @@ import type { Result } from "../result";
    * assert(result.isErr() === true);
    * ```
    *
-   * @param error The possible error computer.
+   * @param error The producer for the possible error.
    *
    * @return The result.
    */
@@ -299,7 +379,7 @@ import type { Result } from "../result";
    * assert(result === option);
    * ```
    *
-   * If this option is `None`, the other option is computed and returned.
+   * If this option is `None`, the other option is produced and returned.
    *
    * ```ts
    * option = none();
@@ -308,9 +388,9 @@ import type { Result } from "../result";
    * assert(result.unwrap() === 'other);
    * ```
    *
-   * @param other The other option computer.
+   * @param other The producer for the other option.
    *
-   * @returns This or the other computed option.
+   * @returns This or the other option.
    */
   orElse(other: Produce<Option<T>>): Option<T>;
 
@@ -399,7 +479,7 @@ import type { Result } from "../result";
    * assert(result === 'example');
    * ```
    *
-   * If this option is `None`, the default value is computed and returned.
+   * If this option is `None`, the default value is produced and returned.
    *
    * ```this
    * option = none();
@@ -408,9 +488,9 @@ import type { Result } from "../result";
    * assert(result === 'default');
    * ```
    *
-   * @param def The default value computer.
+   * @param def The producer for the default value.
    *
-   * @return The unwrapped or computed default value.
+   * @return The unwrapped or default value.
    */
   unwrapOrElse(def: Produce<T>): T;
 

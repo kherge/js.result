@@ -37,6 +37,14 @@ describe('None', () => {
     });
   });
 
+  describe('expect()', () => {
+    const error = 'error';
+
+    test('should always throw an error', () => {
+      expect(() => option.expect(error)).toThrow(error);
+    });
+  });
+
   describe('filter()', () => {
     let predicate: Predicate<string>;
     let result: Option<string>;
@@ -47,6 +55,32 @@ describe('None', () => {
 
       expect(result.isNone()).toBe(true);
       expect(predicate).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('getOrInsert()', () => {
+    const value = 'value';
+    let result: string;
+
+    test('should always insert', () => {
+      result = option.getOrInsert(value);
+
+      expect(result).toBe(value);
+      expect(option.isSome()).toBe(true);
+      expect(option.unwrap()).toBe(value);
+    });
+  });
+
+  describe('getOrInsertWith()', () => {
+    const value = () => 'value';
+    let result: string;
+
+    test('should always insert', () => {
+      result = option.getOrInsertWith(value);
+
+      expect(result).toEqual('value');
+      expect(option.isSome()).toBe(true);
+      expect(option.unwrap()).toEqual('value');
     });
   });
 

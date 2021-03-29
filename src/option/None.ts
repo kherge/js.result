@@ -18,8 +18,26 @@ class None<T> implements Option<T> {
     return new None();
   }
 
+  expect(message: string): never {
+    throw new OptionError(message);
+  }
+
   filter(_: Predicate<T>): Option<T> {
     return new None();
+  }
+
+  getOrInsert(value: T): T {
+    this.replace(value);
+
+    return value;
+  }
+
+  getOrInsertWith(fn: Produce<T>): T {
+    const value = fn();
+
+    this.replace(value);
+
+    return value;
   }
 
   isNone(): boolean {

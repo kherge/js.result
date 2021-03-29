@@ -38,6 +38,17 @@ describe('Some', () => {
     });
   });
 
+  describe('expect()', () => {
+    const error = 'error';
+    let result: string;
+
+    test('should always return the value', () => {
+      result = option.expect(error);
+
+      expect(result).toEqual('a');
+    });
+  });
+
   describe('filter()', () => {
     let predicate: Predicate<string>;
     let result: Option<string>;
@@ -55,6 +66,28 @@ describe('Some', () => {
       result = option.filter(predicate);
 
       expect(result.isNone()).toBe(true);
+    });
+  });
+
+  describe('getOrInsert()', () => {
+    const value = 'value';
+    let result: string;
+
+    test('should always return value', () => {
+      result = option.getOrInsert(value);
+
+      expect(result).toEqual('a');
+    });
+  });
+
+  describe('getOrInsert()', () => {
+    const value = () => 'value';
+    let result: string;
+
+    test('should always return value', () => {
+      result = option.getOrInsertWith(value);
+
+      expect(result).toEqual('a');
     });
   });
 
