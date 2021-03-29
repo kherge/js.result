@@ -1,6 +1,6 @@
 # Result
 
-Bringing Rust's `Option<T>` and `Result<T, E>` to TypeScript.
+A zero dependencies library for bringing Rust's `Option<T>` and `Result<T, E>` to TypeScript.
 
 ```ts
 import { Option, Result, err, none, ok, some } from '@kherge/result';
@@ -24,23 +24,27 @@ result = err(123);
 console.log(result.unwrap()); // throws error
 ```
 
+## Installation
+
+    npm install @kherge/result
+
 ## Documentation
 
 Please see the [GitHub Pages][] site for documentation.
 
 [github pages]: https://github.io/kherge/js.result
 
-## Installation
-
-    npm install @kherge/result
-
-## Requirements
-
-- TypeScript
-
 ## Development
 
 Created using [TSDX](https://tsdx.io/).
+
+### Requirements
+
+- NPM
+
+Development can be started after installing the development dependencies.
+
+    npm install
 
 ### Building
 
@@ -48,11 +52,19 @@ Created using [TSDX](https://tsdx.io/).
 
 Builds to the `dist/` folder.
 
+    npm run build:docs
+
+Builds the documentation to the `docs/` folder.
+
 ### Linting
 
     npm run lint
 
 Runs ESLint with Prettier.
+
+> There are some version compatibility issues with TSDX and TypeScript 4. For the moment, I have
+> opted to disable linting in GitHub Action builds but will enable it in the future once the issue
+> has been sorted out. See: formium/tsdx#810
 
 ### Unit Testing
 
