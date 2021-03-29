@@ -13,6 +13,9 @@ import type { Option } from "../option";
  * // A value for failure.
  * result = err(123);
  * ```
+ * 
+ * @typeParam T The type of the success value.
+ * @typeParam E The type of the failure value.
  */
 interface Result<T, E> {
   /**
@@ -34,6 +37,8 @@ interface Result<T, E> {
    *
    * assert(output === result);
    * ```
+   * 
+   * @typeParam U The type of the value in the other result.
    *
    * @param other The other result.
    *
@@ -60,6 +65,8 @@ interface Result<T, E> {
    *
    * assert(output === result);
    * ```
+   * 
+   * @typeParam U The type of the value in the computed result.
    *
    * @param fn The other result computer.
    *
@@ -213,6 +220,8 @@ interface Result<T, E> {
    *
    * assert(output === result);
    * ```
+   * 
+   * @typeParam U The type of the value in the computed result.
    *
    * @param fn The mapping function.
    *
@@ -240,6 +249,8 @@ interface Result<T, E> {
    *
    * assert(output === result);
    * ```
+   * 
+   * @typeParam F The type of the error in the computed result.
    *
    * @param fn The mapping function.
    *
@@ -267,6 +278,8 @@ interface Result<T, E> {
    *
    * assert(output === 456);
    * ```
+   * 
+   * @typeParam U The type of the computed or default value.
    *
    * @param def The default value.
    * @param fn  The mapping function.
@@ -295,6 +308,8 @@ interface Result<T, E> {
    *
    * assert(output === 456);
    * ```
+   * 
+   * @typeParam U The type of the computed or default value.
    *
    * @param def The default value computer.
    * @param fn  The mapping function.
@@ -356,6 +371,8 @@ interface Result<T, E> {
    *
    * assert(output === other);
    * ```
+   * 
+   * @typeParam F The type of the error in the computed result.
    *
    * @param other The other result.
    *
@@ -382,6 +399,8 @@ interface Result<T, E> {
    *
    * assert(output === 'default');
    * ```
+   * 
+   * @typeParam F The type of the error in the computed result.
    *
    * @param fn The default result computer.
    *

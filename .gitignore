@@ -36,5 +36,8 @@
 # Except the README.
 !/README.md
 
+# Except the TypeDoc configuration.
+!/typedoc.json
+
 # Except the TypeScript configuration.
 !/tsconfig.json

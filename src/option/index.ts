@@ -5,10 +5,12 @@ import Some from './Some';
  * Creates a new instance of `None`.
  *
  * ```ts
- * let option = none();
+ * let option: Option<string> = none();
  *
  * assert(option.isNone() === true);
  * ```
+ *
+ * @typeParam T The type of the value.
  *
  * @return The instance.
  */
@@ -18,10 +20,12 @@ export const none = <T>() => new None<T>();
  * Creates a new instance of `Some`.
  *
  * ```ts
- * let option = some('example');
+ * let option: Option<string> = some('example');
  *
  * assert(option.isSome() === true);
  * ```
+ *
+ * @typeParam T The type of the value.
  *
  * @param value The value to wrap.
  *

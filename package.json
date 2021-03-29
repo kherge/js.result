@@ -27,7 +27,7 @@
   },
   "scripts": {
     "build": "tsdx build",
-    "build:docs": "typedoc src/index.ts",
+    "build:docs": "typedoc --options typedoc.json src/index.ts",
     "lint": "tsdx lint",
     "size": "size-limit",
     "size:why": "size-limit --why",

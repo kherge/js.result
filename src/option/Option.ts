@@ -13,6 +13,8 @@ import type { Result } from "../result";
  * // A value that is absent.
  * option = none();
  * ```
+ * 
+ * @typeParam T The type of the value.
  */
  interface Option<T> {
   /**
@@ -34,6 +36,8 @@ import type { Result } from "../result";
    *
    * assert(result.isNone() === true);
    * ```
+   * 
+   * @typeParam U The type of the value in the other option.
    *
    * @param other The other option.
    *
@@ -60,6 +64,8 @@ import type { Result } from "../result";
    *
    * assert(result.isNone() === true);
    * ```
+   * 
+   * @typeParam U The type of the computed value.
    *
    * @param fn The option mapper.
    *
@@ -227,6 +233,8 @@ import type { Result } from "../result";
    * ```
    *
    * If this option is `None`, then `None` is returned.
+   * 
+   * @param U The type of the computed value.
    *
    * @param fn The mapping function.
    *
@@ -254,6 +262,8 @@ import type { Result } from "../result";
    *
    * assert(result.unwrap() === 456);
    * ```
+   * 
+   * @param U The type of the computed or default value.
    *
    * @param def The default value.
    * @param fn  The mapping function.
@@ -282,6 +292,8 @@ import type { Result } from "../result";
    *
    * assert(result.unwrap() === 456);
    * ```
+   * 
+   * @param U The type of the computed or default value.
    *
    * @param def The default value producer.
    * @param fn  The mapping function.
@@ -309,6 +321,8 @@ import type { Result } from "../result";
    *
    * assert(result.isErr() === true);
    * ```
+   * 
+   * @typeParam E The type of the error value.
    *
    * @param error The possible error.
    *
@@ -335,6 +349,8 @@ import type { Result } from "../result";
    *
    * assert(result.isErr() === true);
    * ```
+   * 
+   * @typeParam E The type of the error value.
    *
    * @param error The producer for the possible error.
    *
@@ -371,7 +387,7 @@ import type { Result } from "../result";
   /**
    * Returns this option if `Some`.
    *
-   * ```this
+   * ```ts
    * let option = some('example');
    * let fn = () => some('other');
    * let result = option.orElse(fn);
@@ -481,7 +497,7 @@ import type { Result } from "../result";
    *
    * If this option is `None`, the default value is produced and returned.
    *
-   * ```this
+   * ```ts
    * option = none();
    * result = option.unwrapOrElse(fn);
    *
@@ -546,6 +562,8 @@ import type { Result } from "../result";
    * assert(values[0] === 'example');
    * assert(values[1] === 'other');
    * ```
+   * 
+   * @typeParam U The type of the value in the other option.
    *
    * @param other The other option.
    *
