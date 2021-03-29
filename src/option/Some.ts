@@ -10,7 +10,7 @@ import { ok } from "../result";
  */
 class Some<T> implements Option<T> {
   /**
-   * Wraps the optional value.
+   * Sets the wrapped value.
    *
    * @param value The value.
    */
