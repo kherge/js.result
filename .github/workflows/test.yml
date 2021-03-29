@@ -27,4 +27,5 @@ jobs:
       # Test the project.
       - run: npm ci
       - run: npm run lint
+        continue-on-error: true
       - run: npm test -- --ci --coverage --maxWorkers=2
