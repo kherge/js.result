@@ -5,62 +5,72 @@ import type { Option } from '../../src/option';
 import Err from '../../src/result/Err';
 import Ok from '../../src/result/Ok';
 
+type TestError = {
+  error: string;
+};
+
+type TestOther = {
+  other: string;
+};
+
+type TestValue = {
+  value: string;
+};
+
 describe('Err', () => {
-  let result: Result<string, number>;
+  let result: Result<TestValue, TestError>;
+  const value: TestError = { error: 'error' };
 
   beforeEach(() => {
-    result = new Err(123);
+    result = new Err(value);
   });
 
   describe('and()', () => {
-    let other: Result<boolean, number>;
-    let output: Result<boolean, number>;
+    test('always return Err', () => {
+      const other: Result<TestOther, TestError> = new Ok({ other: 'other' });
+      const output: Result<TestOther, TestError> = result.and(other);
 
-    test('should always return self', () => {
-      other = new Ok(true);
-      output = result.and(other);
-
+      expect(output.isErr()).toBe(true);
       expect(output).not.toBe(result);
       expect(output).toStrictEqual(result);
     });
   });
 
   describe('andThen()', () => {
-    let other: Compute<string, Result<boolean, number>>;
-    let output: Result<boolean, number>;
+    test('always return Err', () => {
+      const fn: Compute<TestValue, Result<TestOther, TestError>> = jest.fn();
+      const output = result.andThen(fn);
 
-    test('should always return self', () => {
-      other = _ => new Ok(true);
-      output = result.andThen(other);
-
+      expect(fn).not.toHaveBeenCalledWith();
+      expect(output.isErr()).toBe(true);
+      expect(output).not.toBe(result);
       expect(output).toStrictEqual(result);
     });
   });
 
-  describe('new Err()', () => {
-    let output: Option<number>;
-
+  describe('err()', () => {
     test('should always return Some', () => {
-      output = result.err();
+      const output: Option<TestError> = result.err();
 
       expect(output.isSome()).toBe(true);
-      expect(output.unwrap()).toEqual(123);
+      expect(output.unwrap()).toBe(value);
     });
   });
 
   describe('expect()', () => {
-    const error = 'error';
-
     test('should always throw error', () => {
-      expect(() => result.expect(error)).toThrow(error);
+      const message: string = 'error';
+      
+      expect(() => result.expect(message)).toThrow(message);
     });
   });
 
   describe('expectErr()', () => {
-    const error = 'error';
-
     test('should always return the value', () => {
-      expect(result.expectErr(error)).toEqual(123);
+      const message: string = 'error';
+      const output: TestError = result.expectErr(message);
+
+      expect(output).toBe(value);
     });
   });
 
@@ -77,69 +87,73 @@ describe('Err', () => {
   });
 
   describe('map()', () => {
-    const fn: Compute<string, boolean> = r => r.length === 4;
-    let output: Result<boolean, number>;
+    test('should always return Err', () => {
+      const fn: Compute<TestValue, TestOther> = jest.fn();
+      const output: Result<TestOther, TestError> = result.map(fn);
 
-    test('should always return self', () => {
-      output = result.map(fn);
-
+      expect(fn).not.toHaveBeenCalled();
       expect(output.isErr()).toBe(true);
+      expect(output).not.toBe(result);
       expect(output).toStrictEqual(result);
     });
   });
 
   describe('mapErr()', () => {
-    const fn: Compute<number, boolean> = r => r === 123;
-    let output: Result<string, boolean>;
+    test('should always map the value', () => {
+      const other: TestOther = {other: 'other'};
+      const fn: Compute<TestError, TestOther> = jest.fn(() => other);
+      const output: Result<TestValue, TestOther> = result.mapErr(fn);
 
-    test('should always return mapped value', () => {
-      output = result.mapErr(fn);
-
+      expect(fn).toHaveBeenCalledWith(value);
       expect(output.isErr()).toBe(true);
-      expect(output.unwrapErr()).toEqual(true);
+      expect(output).not.toBe(result);
+      expect(output.unwrapErr()).toBe(other);
     });
   });
 
   describe('mapOr()', () => {
-    const def = false;
-    const fn: Compute<string, boolean> = r => r.length === 4;
-    let output: boolean;
+    test('should always return the default value', () => {
+      const def: TestOther = { other: 'other' };
+      const fn: Compute<TestValue, TestOther> = jest.fn();
+      const output: TestOther = result.mapOr(def, fn);
 
-    test('should always return default value', () => {
-      output = result.mapOr(def, fn);
-
-      expect(output).toBe(false);
+      expect(fn).not.toHaveBeenCalled();
+      expect(output).toBe(def);
     });
   });
 
   describe('mapOrElse()', () => {
-    const def: Compute<number, boolean> = r => r === 123;
-    const fn: Compute<string, boolean> = r => r.length === 4;
-    let output: boolean;
+    test('should always return the default value', () => {
+      const other: TestOther = { other: 'other' };
+      const def: Compute<TestError, TestOther> = jest.fn(() => other);
+      const fn: Compute<TestValue, TestOther> = jest.fn();
+      const output: TestOther = result.mapOrElse(def, fn);
 
-    test('should always return the mapped default value', () => {
-      output = result.mapOrElse(def, fn);
-
-      expect(output).toBe(true);
+      expect(def).toHaveBeenCalledWith(value);
+      expect(fn).not.toHaveBeenCalled();
+      expect(output).toBe(other);
     });
   });
 
-  describe('new Ok()', () => {
-    let output: Option<string>;
-
+  describe('ok()', () => {
     test('should always return None', () => {
-      output = result.ok();
+      const output: Option<TestValue> = result.ok();
 
       expect(output.isNone());
     });
   });
 
   describe('or()', () => {
-    let other: Result<string, boolean>;
-    let output: Result<string, boolean>;
+    test('should always return the default value', () => {
+      let other: Result<TestValue, TestOther>;
+      let output: Result<TestValue, TestOther>;
+      
+      other = new Ok({value: 'other'});
+      output = result.or(other);
 
-    test('should always return the other result', () => {
-      other = new Ok('other');
+      expect(output).toBe(other);
+
+      other = new Err({other: 'error'});
       output = result.or(other);
 
       expect(output).toBe(other);
@@ -147,37 +161,38 @@ describe('Err', () => {
   });
 
   describe('orElse()', () => {
-    let other: Compute<number, Result<string, boolean>>;
-    let output: Result<string, boolean>;
+    test('should always return the default value', () => {
+      let other: Result<TestValue, TestOther> = new Ok({value: 'other'});
+      let fn: Compute<TestError, Result<TestValue, TestOther>> = jest.fn(() => other);
+      let output: Result<TestValue, TestOther> = result.orElse(fn);
 
-    test('should always compute and return the other result', () => {
-      other = () => new Ok('other');
-      output = result.orElse(other);
-
-      expect(output.isOk()).toBe(true);
-      expect(output.unwrap()).toEqual('other');
+      expect(fn).toHaveBeenCalledWith(value);
+      expect(output).toBe(other);
     });
   });
 
   describe('unwrap()', () => {
-    test('should always throw an error', () => {
-      expect(() => result.unwrap()).toThrow('123');
-    });
-
-    test('should always throw an error (handling function)', () => {
-      const result = new Err(() => {});
+    test('should always throw an error (function)', () => {
+      const error = () => 'error';
+      const result: Result<string, typeof error> = new Err(error);
 
       expect(() => result.unwrap()).toThrow('[Function]');
     });
 
-    test('should always throw an error (handling object)', () => {
-      const result = new Err({ test: 123 });
-
-      expect(() => result.unwrap()).toThrow('{"test":123}');
+    test('should always throw an error (object)', () => {
+      expect(() => result.unwrap()).toThrow(JSON.stringify(value));
     });
 
-    test('should always throw an error (handling symbol)', () => {
-      const result = new Err(Symbol('test'));
+    test('should always throw an error (scalar)', () => {
+      const error: string = 'error';
+      const result: Result<string, string> = new Err(error);
+
+      expect(() => result.unwrap()).toThrow(error);
+    });
+    
+    test('should always throw an error (symbol)', () => {
+      const error = Symbol('symbol');
+      const result: Result<string, typeof error> = new Err(error);
 
       expect(() => result.unwrap()).toThrow('[Symbol]');
     });
@@ -185,27 +200,27 @@ describe('Err', () => {
 
   describe('unwrapErr()', () => {
     test('should always return the value', () => {
-      expect(result.unwrapErr()).toEqual(123);
+      expect(result.unwrapErr()).toBe(value);
     });
   });
 
   describe('unwrapOr()', () => {
-    const def = 'default';
-
     test('should always return the default value', () => {
-      const output = result.unwrapOr(def);
+      const def: TestValue = {value: 'value'};
+      const output: TestValue = result.unwrapOr(def);
 
       expect(output).toBe(def);
     });
   });
 
   describe('unwrapOrElse()', () => {
-    const def = () => 'default';
+    test('should always return the default value', () => {
+      const def: TestValue = {value: 'value'};
+      const fn: Compute<TestError, TestValue> = jest.fn(() => def);
+      const output: TestValue = result.unwrapOrElse(fn);
 
-    test('should always compute and return the default value', () => {
-      const output = result.unwrapOrElse(def);
-
-      expect(output).toEqual('default');
+      expect(fn).toHaveBeenCalledWith(value);
+      expect(output).toBe(def);
     });
   });
 });
