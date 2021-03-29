@@ -1,69 +1,65 @@
 import type Option from "../../src/option/Option";
-import type { Compute, Predicate } from '../../src/types';
+import type { Compute, Predicate, Produce } from '../../src/types';
 import type { Result } from '../../src/result';
 
 import None from "../../src/option/None";
 import Some from "../../src/option/Some";
 
+type TestType = {
+  value: string;
+};
+
 describe('None', () => {
-  let option: Option<string>;
+  let option: Option<TestType>;
 
   beforeEach(() => {
     option = new None();
   });
 
   describe('and()', () => {
-    let other: Option<boolean>;
-    let result: Option<boolean>;
-
-    test('should always return', () => {
-      other = new Some(true);
-      result = option.and(other);
+    test('should always return None', () => {
+      const other: Option<string> = new Some('other');
+      const result: Option<string> = option.and(other);
 
       expect(result.isNone()).toBe(true);
+      expect(result).not.toBe(option);
     });
   });
 
   describe('andThen()', () => {
-    let fn: Compute<string, Option<boolean>>;
-    let result: Option<boolean>;
+    test('should always return None', () => {
+      const fn: Compute<TestType, Option<TestType>> = jest.fn();
+      const result: Option<TestType> = option.andThen(fn);
 
-    test('should never invoke the mapper and always return None', () => {
-      fn = jest.fn();
-      result = option.andThen(fn);
-
-      expect(result.isNone()).toBe(true);
       expect(fn).not.toHaveBeenCalled();
+      expect(result.isNone()).toBe(true);
+      expect(result).not.toBe(option);
     });
   });
 
   describe('expect()', () => {
-    const error = 'error';
-
     test('should always throw an error', () => {
-      expect(() => option.expect(error)).toThrow(error);
+      const message: string = 'error';
+      
+      expect(() => option.expect(message)).toThrow(message);
     });
   });
 
   describe('filter()', () => {
-    let predicate: Predicate<string>;
-    let result: Option<string>;
+    test('should always return itself', () => {
+      const fn: Predicate<TestType> = jest.fn();
+      const result: Option<TestType> = option.filter(fn);
 
-    test('should never invoke the predicate and always return None', () => {
-      predicate = jest.fn();
-      result = option.filter(predicate);
-
+      expect(fn).not.toHaveBeenCalled();
       expect(result.isNone()).toBe(true);
-      expect(predicate).not.toHaveBeenCalled();
+      expect(result).not.toBe(option);
     });
   });
 
   describe('getOrInsert()', () => {
-    const value = 'value';
-    let result: string;
-
     test('should always insert', () => {
-      result = option.getOrInsert(value);
+      const value: TestType = {value: 'value'};
+      const result: TestType = option.getOrInsert(value);
 
       expect(result).toBe(value);
       expect(option.isSome()).toBe(true);
@@ -72,15 +68,15 @@ describe('None', () => {
   });
 
   describe('getOrInsertWith()', () => {
-    const value = () => 'value';
-    let result: string;
-
     test('should always insert', () => {
-      result = option.getOrInsertWith(value);
+      const value: TestType = {value: 'value'};
+      const fn: Produce<TestType> = jest.fn(() => value);
+      const result: TestType = option.getOrInsertWith(fn);
 
-      expect(result).toEqual('value');
+      expect(fn).toHaveBeenCalled();
+      expect(result).toBe(value);
       expect(option.isSome()).toBe(true);
-      expect(option.unwrap()).toEqual('value');
+      expect(option.unwrap()).toBe(value);
     });
   });
 
@@ -97,146 +93,133 @@ describe('None', () => {
   });
 
   describe('map()', () => {
-    let fn: Compute<string, number>;
-    let result: Option<number>;
+    test('should always return None', () => {
+      const fn: Compute<TestType, number> = jest.fn();
+      const result: Option<number> = option.map(fn);
 
-    test('should never invoke the mapper and always return None', () => {
-      fn = jest.fn();
-      result = option.map(fn);
-
-      expect(result.isNone()).toBe(true);
       expect(fn).not.toHaveBeenCalled();
+      expect(result.isNone()).toBe(true);
+      expect(result).not.toBe(option);
     });
   });
 
   describe('mapOr()', () => {
-    const def = 123;
-    let fn: Compute<string, number>;
-    let result: number;
+    test('should always return the default value', () => {
+      const def: number = 123;
+      const fn: Compute<TestType, number> = jest.fn();
+      const result: number = option.mapOr(def, fn);
 
-    test('should never invoke the mapper and always return the default value', () => {
-      fn = jest.fn();
-      result = option.mapOr(def, fn);
-
-      expect(result).toEqual(def);
       expect(fn).not.toHaveBeenCalled();
+      expect(result).toEqual(def);
     });
   });
 
   describe('mapOrElse()', () => {
-    const def = () => 123;
-    let fn: Compute<string, number>;
-    let result: number;
+    test('should always return the default value', () => {
+      const value: number = 123;
+      const def: Produce<number> = jest.fn(() => value);
+      const fn: Compute<TestType, number> = jest.fn();
+      const result: number = option.mapOrElse(def, fn);
 
-    test('should never invoke the mapper and return the computed default value', () => {
-      fn = jest.fn();
-      result = option.mapOrElse(def, fn);
-
-      expect(result).toEqual(123);
+      expect(def).toHaveBeenCalled();
       expect(fn).not.toHaveBeenCalled();
+      expect(result).toEqual(value);
     });
   });
 
   describe('okOr()', () => {
-    const error = 'test';
-    let result: Result<string, string>;
-
     test('should always return Err', () => {
-      result = option.okOr(error);
+      const error: string = 'error';
+      const result: Result<TestType, string> = option.okOr(error);
 
       expect(result.isErr()).toBe(true);
-      expect(result.err().isSome()).toBe(true);
-      expect(result.err().unwrap()).toEqual(error);
+      expect(result.unwrapErr()).toBe(error);
     });
   });
 
   describe('okOrElse()', () => {
-    const error = () => 'test';
-    let result: Result<string, string>;
+    test('should always return Err', () => {
+      const error: string = 'error';
+      const fn: Produce<string> = jest.fn(() => 'error');
+      const result: Result<TestType, string> = option.okOrElse(fn);
 
-    test('should always compute the error value and return Err', () => {
-      result = option.okOrElse(error);
-
+      expect(fn).toHaveBeenCalled();
       expect(result.isErr()).toBe(true);
-      expect(result.err().isSome()).toBe(true);
-      expect(result.err().unwrap()).toEqual(error());
+      expect(result.unwrapErr()).toBe(error);
     });
   });
 
   describe('or()', () => {
-    const other = new Some('b');
-    let result: Option<string>;
-
     test('should always return the other option', () => {
-      result = option.or(other);
+      const other: Option<TestType> = new Some({ value: 'value'});
+      const result: Option<TestType> = option.or(other);
 
       expect(result).toBe(other);
     });
   });
 
   describe('orElse()', () => {
-    const other = () => new Some('b');
-    let result: Option<string>;
+    test('should always return the other option', () => {
+      const other: Option<TestType> = new Some({value: 'value'});
+      const fn: Produce<Option<TestType>> = jest.fn(() => other);
+      const result: Option<TestType> = option.orElse(fn);
 
-    test('should always return the computed other option', () => {
-      result = option.orElse(other);
-
-      expect(result.isSome()).toBe(true);
-      expect(result.unwrap()).toEqual('b');
+      expect(fn).toHaveBeenCalled();
+      expect(result).toBe(other);
     });
   });
 
   describe('replace()', () => {
-    test('should convert the option to Some and return None', () => {
-      const old: Option<string> = option.replace('b');
+    test('should replace the value and return None', () => {
+      const value: TestType = {value: 'value'};
+      const result: Option<TestType> = option.replace(value);
 
-      expect(old.isNone()).toBe(true);
+      expect(result.isNone()).toBe(true);
+      expect(result).not.toBe(option);
       expect(option.isSome()).toBe(true);
-      expect(option.unwrap()).toEqual('b');
+      expect(option.unwrap()).toBe(value);
     });
   });
 
   describe('unwrap()', () => {
-    test('should always throw', () => {
+    test('should always throw an error', () => {
       expect(() => option.unwrap()).toThrow('No value to unwrap.');
     });
   });
 
   describe('unwrapOr()', () => {
-    const def = 'b';
-    let result: string;
-
-    test('should always return default value', () => {
-      result = option.unwrapOr(def);
-
-      expect(result).toEqual(def);
+    test('should always return the default value', () => {
+      const def: TestType = {value: 'value'};
+      const result: TestType = option.unwrapOr(def);
+  
+      expect(result).toBe(def);
     });
   });
 
   describe('unwrapOrElse()', () => {
-    const def = () => 'b';
-    let result: string;
-
-    test('should always return the computed default value', () => {
-      result = option.unwrapOrElse(def);
-
-      expect(result).toEqual(def());
+    test('should always return the default value', () => {
+      const def: TestType = {value: 'value'};
+      const fn: Produce<TestType> = jest.fn(() => def);
+      const result: TestType = option.unwrapOrElse(fn);
+  
+      expect(fn).toHaveBeenCalled();
+      expect(result).toBe(def);
     });
   });
 
-  describe('xor()', () => {
-    let other: Option<string>;
-    let result: Option<string>;
+  describe('xor', () => {
+    let other: Option<TestType>;
+    let result: Option<TestType>;
 
-    test('should return the other option', () => {
-      other = new Some('b');
+    test('should return the other option if it is Some', () => {
+      other = new Some({value: 'value'});
       result = option.xor(other);
 
       expect(result).toBe(other);
     });
 
-    test('should return new None if other option is None', () => {
-      other = new None();
+    test('should return None if the other option is None', () => {
+      other = new None<TestType>();
       result = option.xor(other);
 
       expect(result.isNone()).toBe(true);
@@ -246,14 +229,12 @@ describe('None', () => {
   });
 
   describe('zip()', () => {
-    let other: Option<string>;
-    let result: Option<[string, string]>;
-
     test('should always return None', () => {
-      other = new None();
-      result = option.zip(other);
+      const other: Option<string> = new Some('other');
+      const result: Option<[TestType, string]> = option.zip(other);
 
-      expect(result.isNone()).toBe(true);
+      expect(result.isNone());
+      expect(result).not.toBe(option);
     });
   });
 });
