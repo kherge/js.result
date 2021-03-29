@@ -46,8 +46,8 @@ interface Result<T, E> {
    *
    * ```ts
    * let result = ok('example');
-   * let other = r => ok(r + ' other');
-   * let output = result.and(other);
+   * let fn = r => ok(r + ' other');
+   * let output = result.andThen(fn);
    *
    * assert(output.unwrap() === 'example other');
    * ```
@@ -56,16 +56,16 @@ interface Result<T, E> {
    *
    * ```ts
    * result = err(123);
-   * output = result.and(other);
+   * output = result.andThen(fn);
    *
    * assert(output === result);
    * ```
    *
-   * @param other The other result computer.
+   * @param fn The other result computer.
    *
    * @return The `other` result or this `Err`.
    */
-  andThen<U>(other: Compute<T, Result<U, E>>): Result<U, E>;
+  andThen<U>(fn: Compute<T, Result<U, E>>): Result<U, E>;
 
   /**
    * Transforms this `Result<T, E>` into `Some<E>` if it is `Err`.
@@ -95,9 +95,9 @@ interface Result<T, E> {
    * Returns the value in this result if `Ok`.
    *
    * ```ts
-   * let error = 'Example error message.';
+   * let message = 'Example error message.';
    * let result = ok('example');
-   * let output = result.expect(error);
+   * let output = result.expect(message);
    *
    * assert(output === 'example');
    * ```
@@ -106,26 +106,26 @@ interface Result<T, E> {
    *
    * ```ts
    * result = err(123);
-   * output = result.expect(error);
+   * output = result.expect(message);
    *
    * // throws error
    * ```
    *
-   * @param error The error message.
+   * @param message The error message.
    *
    * @return The value.
    *
    * @throws {ResultError} If this is `Err`.
    */
-  expect(error: string): T;
+  expect(message: string): T;
 
   /**
    * Returns the value in this result if `Err`.
    *
    * ```ts
-   * let error = 'Example error message.';
+   * let message = 'Example error message.';
    * let result = err(123);
-   * let output = result.expectErr(error);
+   * let output = result.expectErr(message);
    *
    * assert(output === 123);
    * ```
@@ -134,18 +134,18 @@ interface Result<T, E> {
    *
    * ```ts
    * result = ok('example');
-   * output = result.expectErr(error);
+   * output = result.expectErr(message);
    *
    * // throws error
    * ```
    *
-   * @param error The error message.
+   * @param message The error message.
    *
    * @return The value.
    *
    * @throws {ResultError} If this is `Ok`.
    */
-  expectErr(error: string): E;
+  expectErr(message: string): E;
 
   /**
    * Returns `true` if this result is `Error`.
@@ -282,7 +282,7 @@ interface Result<T, E> {
    * let def = r => r + 333;
    * let fn = r => r.length;
    * let result = ok('example');
-   * let output = result.mapOr(def, fn);
+   * let output = result.mapOrElse(def, fn);
    *
    * assert(output === 7);
    * ```
@@ -331,45 +331,45 @@ interface Result<T, E> {
    * Returns this result if this result is `Ok`.
    *
    * ```ts
-   * let def = ok('default');
+   * let other = ok('other');
    * let result = ok('example');
-   * let output = result.or(def);
+   * let output = result.or(other);
    *
    * assert(output === result);
    * ```
    *
-   * If this result is `Err`, then the default result is returned.
+   * If this result is `Err`, then the other result is returned.
    *
    * ```ts
    * result = err(123);
-   * output = result.or(def);
+   * output = result.or(other);
    *
-   * assert(output === def);
+   * assert(output === other);
    * ```
    *
-   * If both this and the default result is `Err`, the default result is returned.
+   * If both this and the other result is `Err`, the other result is returned.
    *
    * ```ts
-   * def = err(456);
+   * other = err(456);
    * result = err(123);
-   * output = result.or(def);
+   * output = result.or(other);
    *
-   * assert(output === def);
+   * assert(output === other);
    * ```
    *
-   * @param def The default result.
+   * @param other The other result.
    *
-   * @return This or the default result.
+   * @return This or the other result.
    */
-  or<F>(def: Result<T, F>): Result<T, F>;
+  or<F>(other: Result<T, F>): Result<T, F>;
 
   /**
    * Returns this result if this result is `Ok`.
    *
    * ```ts
-   * let def = () => ok('default');
+   * let fn = () => ok('default');
    * let result = ok('example');
-   * let output = result.or(def);
+   * let output = result.orElse(fn);
    *
    * assert(output === result);
    * ```
@@ -378,16 +378,16 @@ interface Result<T, E> {
    *
    * ```ts
    * result = err(123);
-   * output = result.or(def);
+   * output = result.orElse(fn);
    *
-   * assert(output === def);
+   * assert(output === 'default');
    * ```
    *
-   * @param def The default result computer.
+   * @param fn The default result computer.
    *
    * @return This or the default result.
    */
-  orElse<F>(def: Compute<E, Result<T, F>>): Result<T, F>;
+  orElse<F>(fn: Compute<E, Result<T, F>>): Result<T, F>;
 
   /**
    * Returns the value in this result if this result is `Ok`.
@@ -469,9 +469,9 @@ interface Result<T, E> {
    * Returns the value in this result if this result is `Ok`.
    *
    * ```ts
-   * let def = () => 'default';
+   * let fn = () => 'default';
    * let result = ok('example');
-   * let output = result.unwrapOr(default);
+   * let output = result.unwrapOrElse(fn);
    *
    * assert(output === 'example');
    * ```
@@ -480,16 +480,16 @@ interface Result<T, E> {
    *
    * ```ts
    * result = err(123);
-   * output = result.unwrapOr(default);
+   * output = result.unwrapOrElse(fn);
    *
    * assert(output === 'default');
    * ```
    *
-   * @param def The default value computer.
+   * @param fn The default value computer.
    *
    * @return The value in this result or the default value.
    */
-  unwrapOrElse(def: Compute<E, T>): T;
+  unwrapOrElse(fn: Compute<E, T>): T;
 }
 
 export default Result;

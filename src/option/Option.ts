@@ -373,8 +373,8 @@ import type { Result } from "../result";
    *
    * ```this
    * let option = some('example');
-   * let other = () => some('other');
-   * let result = option.orElse(other);
+   * let fn = () => some('other');
+   * let result = option.orElse(fn);
    *
    * assert(result === option);
    * ```
@@ -383,16 +383,16 @@ import type { Result } from "../result";
    *
    * ```ts
    * option = none();
-   * result = option.orElse(other);
+   * result = option.orElse(fn);
    *
    * assert(result.unwrap() === 'other);
    * ```
    *
-   * @param other The producer for the other option.
+   * @param fn The producer for the other option.
    *
    * @returns This or the other option.
    */
-  orElse(other: Produce<Option<T>>): Option<T>;
+  orElse(fn: Produce<Option<T>>): Option<T>;
 
   /**
    * Replaces the value in this option and returns the old one.
@@ -472,9 +472,9 @@ import type { Result } from "../result";
    * Returns this value in this option if `Some`.
    *
    * ```ts
-   * let def = () => 'default';
+   * let fn = () => 'default';
    * let option = some('example');
-   * let result = option.unwrapOrElse(def);
+   * let result = option.unwrapOrElse(fn);
    *
    * assert(result === 'example');
    * ```
@@ -483,16 +483,16 @@ import type { Result } from "../result";
    *
    * ```this
    * option = none();
-   * result = option.unwrapOrElse(def);
+   * result = option.unwrapOrElse(fn);
    *
    * assert(result === 'default');
    * ```
    *
-   * @param def The producer for the default value.
+   * @param fn The producer for the default value.
    *
    * @return The unwrapped or default value.
    */
-  unwrapOrElse(def: Produce<T>): T;
+  unwrapOrElse(fn: Produce<T>): T;
 
   /**
    * Returns this option if `Some` and the other option is `None`.

@@ -72,8 +72,8 @@ class None<T> implements Option<T> {
     return other;
   }
 
-  orElse(other: Produce<Option<T>>): Option<T> {
-    return other();
+  orElse(fn: Produce<Option<T>>): Option<T> {
+    return fn();
   }
 
   replace(value: T): Option<T> {
@@ -90,8 +90,8 @@ class None<T> implements Option<T> {
     return def;
   }
 
-  unwrapOrElse(def: Produce<T>): T {
-    return def();
+  unwrapOrElse(fn: Produce<T>): T {
+    return fn();
   }
 
   xor(other: Option<T>): Option<T> {
