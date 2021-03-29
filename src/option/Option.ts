@@ -154,7 +154,7 @@ import type { Result } from "../result";
    *
    * @return The value in this option or the given value.
    *
-   * @see Performance impact on {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/setPrototypeOf|MDN}.
+   * @see {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/setPrototypeOf} For details on performance impact.
    */
   getOrInsert(value: T): T;
 
@@ -185,7 +185,7 @@ import type { Result } from "../result";
    *
    * @return The value in this option or the given value.
    *
-   * @see Performance impact on {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/setPrototypeOf|MDN}.
+   * @see {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/setPrototypeOf} For details on performance impact.
    */
   getOrInsertWith(fn: Produce<T>): T;
 
@@ -422,7 +422,7 @@ import type { Result } from "../result";
    *
    * @throws {OptionError} If not `Some`.
    *
-   * @see Performance impact on {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/setPrototypeOf|MDN}.
+   * @see {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/setPrototypeOf} For details on performance impact.
    */
   replace(value: T): Option<T>;
 
