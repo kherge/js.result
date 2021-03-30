@@ -20,8 +20,8 @@ class Ok<T, E> implements Result<T, E> {
     return other;
   }
 
-  andThen<U>(other: Compute<T, Result<U, E>>): Result<U, E> {
-    return other(this.value);
+  andThen<U>(fn: Compute<T, Result<U, E>>): Result<U, E> {
+    return fn(this.value);
   }
 
   err(): Option<E> {
@@ -32,8 +32,8 @@ class Ok<T, E> implements Result<T, E> {
     return this.value;
   }
 
-  expectErr(error: string): never {
-    throw new ResultError(error);
+  expectErr(message: string): never {
+    throw new ResultError(message);
   }
 
   isErr(): boolean {
@@ -65,11 +65,11 @@ class Ok<T, E> implements Result<T, E> {
   }
 
   or<F>(_: Result<T, F>): Result<T, F> {
-    return new Ok(this.value);
+    return this as any as Result<T, F>;
   }
 
   orElse<F>(_: Compute<E, Result<T, F>>): Result<T, F> {
-    return new Ok(this.value);
+    return this as any as Result<T, F>;
   }
 
   unwrap() {

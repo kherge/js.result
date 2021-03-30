@@ -31,3 +31,10 @@ jobs:
       - run: scripts/publish.sh
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      # Publish documentation to GitHub Pages.
+      - run: npm run build:docs
+      - uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./docs/

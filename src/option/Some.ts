@@ -10,7 +10,7 @@ import { ok } from "../result";
  */
 class Some<T> implements Option<T> {
   /**
-   * Wraps the optional value.
+   * Sets the wrapped value.
    *
    * @param value The value.
    */
@@ -24,12 +24,24 @@ class Some<T> implements Option<T> {
     return fn(this.value);
   }
 
+  expect(_: string): T {
+    return this.value;
+  }
+
   filter(predicate: Predicate<T>): Option<T> {
     if (predicate(this.value)) {
       return this;
     }
 
     return new None();
+  }
+
+  getOrInsert(_: T): T {
+    return this.value;
+  }
+
+  getOrInsertWith(_: Produce<T>): T {
+    return this.value;
   }
 
   isNone(): boolean {

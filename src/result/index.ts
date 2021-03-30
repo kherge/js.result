@@ -5,10 +5,13 @@ import Ok from './Ok';
  * Creates a new instance of `Err`.
  *
  * ```ts
- * let result = err('error');
+ * let result: Result<string, string> = err('error');
  *
  * assert(result.isErr() === true);
  * ```
+ *
+ * @typeParam T The type of the success value.
+ * @typeParam E The type of the failure value.
  *
  * @param value The failure value.
  *
@@ -20,10 +23,13 @@ export const err = <T, E>(value: E) => new Err<T, E>(value);
  * Creates a new instance of `Ok`.
  *
  * ```ts
- * let result = ok('value');
+ * let result: Result<string, string> = ok('value');
  *
  * assert(result.isOk() === true);
  * ```
+ *
+ * @typeParam T The type of the success value.
+ * @typeParam E The type of the failure value.
  *
  * @param value The success value.
  *

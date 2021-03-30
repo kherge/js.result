@@ -28,8 +28,8 @@ class Err<T, E> implements Result<T, E> {
     return some(this.value);
   }
 
-  expect(error: string): never {
-    throw new ResultError(error);
+  expect(message: string): never {
+    throw new ResultError(message);
   }
 
   expectErr(_: string): E {
@@ -68,8 +68,8 @@ class Err<T, E> implements Result<T, E> {
     return def;
   }
 
-  orElse<F>(def: Compute<E, Result<T, F>>): Result<T, F> {
-    return def(this.value);
+  orElse<F>(fn: Compute<E, Result<T, F>>): Result<T, F> {
+    return fn(this.value);
   }
 
   unwrap(): never {
@@ -104,8 +104,8 @@ class Err<T, E> implements Result<T, E> {
     return def;
   }
 
-  unwrapOrElse(def: Compute<E, T>): T {
-    return def(this.value);
+  unwrapOrElse(fn: Compute<E, T>): T {
+    return fn(this.value);
   }
 }
 
