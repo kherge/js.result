@@ -1,4 +1,5 @@
 {
   "disableSources": true,
-  "gitRemote": "https://github.com/kherge/js.result"
+  "gitRemote": "https://github.com/kherge/js.result",
+  "includeVersion": true
 }
