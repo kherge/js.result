@@ -10,7 +10,9 @@ class OptionError extends Error {
   constructor(message: string) {
     super(message);
 
-    Object.setPrototypeOf(this, OptionError.prototype);
+    this.name = 'OptionError';
+
+    Object.setPrototypeOf(this, new.target.prototype);
   }
 }
 
