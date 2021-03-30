@@ -32,6 +32,7 @@
     "size": "size-limit",
     "size:why": "size-limit --why",
     "test": "tsdx test",
+    "test:ci": "tsdx test --ci --coverage --runInBand --verbose",
     "test:watch": "tsdx test --watch"
   },
   "files": [
