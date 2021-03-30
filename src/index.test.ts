@@ -1,41 +1,65 @@
-import { Option, Result, err, none, ok, some } from '../src';
+import type { Compute, Option, Predicate, Produce, Result } from '../src';
 
-type TestError = {
-  error: string;
-};
-
-type TestValue = {
-  value: string;
-};
+import { err, none, ok, some } from '../src';
 
 describe('The index', () => {
-  test('should re-export Option', () => {
-    let option: Option<TestValue>;
-    const value: TestValue = { value: 'value' };
+  describe('should re-export the shared type', () => {
+    test('Compute', () => {
+      const compute: Compute<string, number> = s => s.length;
+  
+      expect(compute('test')).toEqual(4);
+    });
 
-    option = none();
+    test('Predicate', () => {
+      const predicate: Predicate<string> = s => s === 'test';
+  
+      expect(predicate('test')).toBe(true);
+    });
 
-    expect(option.isNone()).toBe(true);
-
-    option = some(value);
-
-    expect(option.isSome()).toBe(true);
-    expect(option.unwrap()).toBe(value);
+    test('Produce', () => {
+      const produce: Produce<string> = () => 'test';
+  
+      expect(produce()).toEqual('test');
+    });
   });
 
-  test('should re-export Result', () => {
-    const error: TestError = { error: 'error' };
-    let result: Result<TestValue, TestError>;
-    const value: TestValue = { value: 'value' };
+  describe('should re-export the Option', () => {
+    let value: Option<string>;
 
-    result = err(error);
+    test('interface', () => {
+      // should be caught already by tsc
+    });
 
-    expect(result.isErr()).toBe(true);
-    expect(result.unwrapErr()).toBe(error);
+    test('none()', () => {
+      value = none();
 
-    result = ok(value);
+      expect(value.isNone()).toBe(true);
+    });
 
-    expect(result.isOk()).toBe(true);
-    expect(result.unwrap()).toBe(value);
+    test('some()', () => {
+      value = some('test');
+
+      expect(value.isSome()).toBe(true);
+    });
+  });
+
+  describe('should re-export the Result', () => {
+    let result: Result<string, number>;
+
+    test('interface', () => {
+      // should be caught already by tsc
+    });
+
+    test('err()', () => {
+      result = err(123);
+
+      expect(result.isErr()).toBe(true);
+    });
+
+    test('ok()', () => {
+      result = ok('test');
+
+      expect(result.isOk()).toBe(true);
+    });
   });
 });
