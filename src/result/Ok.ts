@@ -65,11 +65,11 @@ class Ok<T, E> implements Result<T, E> {
   }
 
   or<F>(_: Result<T, F>): Result<T, F> {
-    return new Ok(this.value);
+    return this as any as Result<T, F>;
   }
 
   orElse<F>(_: Compute<E, Result<T, F>>): Result<T, F> {
-    return new Ok(this.value);
+    return this as any as Result<T, F>;
   }
 
   unwrap() {
