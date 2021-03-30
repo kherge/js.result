@@ -2,6 +2,12 @@
 
 A zero dependencies library for bringing Rust's `Option<T>` and `Result<T, E>` to TypeScript.
 
+## Installation
+
+    npm install @kherge/result
+
+## Example
+
 ```ts
 import { Option, Result, err, none, ok, some } from '@kherge/result';
 
@@ -24,15 +30,11 @@ result = err(123);
 console.log(result.unwrap()); // throws error
 ```
 
-## Installation
-
-    npm install @kherge/result
-
 ## Documentation
 
 Please see the [GitHub Pages][] site for documentation.
 
-[github pages]: https://github.io/kherge/js.result
+[github pages]: https://kherge.github.io/js.result/
 
 ## Development
 

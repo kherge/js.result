@@ -5,7 +5,9 @@ class ResultError extends Error {
   constructor(message: string) {
     super(message);
 
-    Object.setPrototypeOf(this, ResultError.prototype);
+    this.name = 'ResultError';
+
+    Object.setPrototypeOf(this, new.target.prototype);
   }
 }
 
