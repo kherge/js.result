@@ -2,7 +2,6 @@ import type Result from '../../src/result/Result';
 import type { Compute } from '../../src/types';
 import type { Option } from '../../src/option';
 
-// import Err from '../../src/result/Err';
 import Ok from '../../src/result/Ok';
 
 type TestError = {
