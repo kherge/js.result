@@ -36,6 +36,9 @@
 # Except the README.
 !/README.md
 
+# Except SonarCloud configuration.
+!/sonar-project.properties
+
 # Except the TypeDoc configuration.
 !/typedoc.json
 
