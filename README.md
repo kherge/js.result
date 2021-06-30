@@ -58,16 +58,6 @@ Builds to the `dist/` folder.
 
 Builds the documentation to the `docs/` folder.
 
-### Linting
-
-    npm run lint
-
-Runs ESLint with Prettier.
-
-> There are some version compatibility issues with TSDX and TypeScript 4. For the moment, I have
-> opted to disable linting in GitHub Action builds but will enable it in the future once the issue
-> has been sorted out. See: formium/tsdx#810
-
 ### Unit Testing
 
     npm test
