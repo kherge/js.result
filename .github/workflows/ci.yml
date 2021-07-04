@@ -1,4 +1,4 @@
-name: Quality Check
+name: Continuous Integration
 
 # Run for all commits not in master.
 on:
@@ -6,7 +6,7 @@ on:
     types: [opened, synchronize, reopened]
 
 jobs:
-  build:
+  test:
     name: Tests
 
     # Use Ubuntu.
@@ -14,7 +14,8 @@ jobs:
 
     steps:
       # Check out the repository.
-      - uses: actions/checkout@v2
+      - name: Check Out
+        uses: actions/checkout@v2
         with:
           fetch-depth: 0
 
@@ -25,13 +26,13 @@ jobs:
           node-version: 14
 
       # Test the project.
-      - run: npm ci
-      - run: npm run lint
-        continue-on-error: true
-      - run: npm run test:ci
+      - name: Install Dependencies
+        run: npm ci
+      - name: Unit Test
+        run: npm run test:ci
 
       # Run analysis.
-      - name: SonarCloud Scan
+      - name: Static Analysis
         uses: sonarsource/sonarcloud-github-action@master
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
