@@ -63,6 +63,6 @@ jobs:
 
       # Publish to NPM
       - name: Publish
-        run: .github/scripts/publish.sh
+        run: .github/scripts/publish-to-npm.sh
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
