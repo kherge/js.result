@@ -1,4 +1,4 @@
-import { none, some } from '.';
+import { maybe, none, some } from '.';
 
 type TestValue = {
   value: string;
@@ -6,6 +6,24 @@ type TestValue = {
 
 describe('The Option export', () => {
   const value: TestValue = { value: 'value' };
+
+  describe('maybe', () => {
+    test.each([null, undefined])(
+      'should create a properly typed None (%s)',
+      actual => {
+        const option = maybe(actual);
+
+        expect(option.isNone());
+      }
+    );
+
+    test('should create a property typed Some', () => {
+      const option = maybe(value);
+
+      expect(option.isSome());
+      expect(option.unwrap()).toBe(value);
+    });
+  });
 
   describe('none', () => {
     test('should create a properly typed None', () => {
