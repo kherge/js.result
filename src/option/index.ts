@@ -23,7 +23,7 @@ import Some from './Some';
  * @return The instance.
  */
 export const maybe = <T>(value: T) => {
-  if (value == null || value === undefined) {
+  if (value === null || value === undefined) {
     return none();
   }
 
