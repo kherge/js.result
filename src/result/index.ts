@@ -10,6 +10,10 @@ import Result from './Result';
  * as an instance of `Err`. If no error is thrown, then the result is returned as an instance of
  * `Ok`.
  *
+ * > It is important to know that this function is unable to determine the proper type of the
+ * > thrown error. While the type defaults to the built-in JavaScript `Error` type, it is very
+ * > much encouraged that you specify the error type.
+ *
  * ```ts
  * // A simple function that can throw an error.
  * const throws = (fail: boolean) => {
