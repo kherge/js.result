@@ -1,6 +1,6 @@
 {
   "name": "@kherge/result",
-  "version": "0.2.0",
+  "version": "1.0.0",
   "description": "Bringing Rust's Option<T> and Result<T, E> to TypeScript.",
   "keywords": [
     "rust",
