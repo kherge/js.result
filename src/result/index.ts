@@ -36,7 +36,7 @@ import Result from './Result';
  * ```
  *
  * @typeparam E The type of the thrown value.
- * @typeparam F The type of the function.
+ * @typeparam T The type of the function's return value.
  *
  * @param fn The function to invoke.
  *
