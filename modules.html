@@ -3,8 +3,8 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>@kherge/result - v0.2.0</title>
-	<meta name="description" content="Documentation for @kherge/result - v0.2.0">
+	<title>@kherge/result - v1.0.0</title>
+	<meta name="description" content="Documentation for @kherge/result - v1.0.0">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="assets/css/main.css">
 	<script async src="assets/js/search.js" id="search-script"></script>
@@ -23,7 +23,7 @@
 						<li class="state loading">Preparing search index...</li>
 						<li class="state failure">The search index is not available</li>
 					</ul>
-					<a href="index.html" class="title">@kherge/result - v0.2.0</a>
+					<a href="index.html" class="title">@kherge/result - v1.0.0</a>
 				</div>
 				<div class="table-cell" id="tsd-widgets">
 					<div id="tsd-filter">
@@ -50,7 +50,7 @@
 	</div>
 	<div class="tsd-page-title">
 		<div class="container">
-			<h1>@kherge/result - v0.2.0</h1>
+			<h1>@kherge/result - v1.0.0</h1>
 		</div>
 	</div>
 </header>
@@ -79,7 +79,9 @@
 						<section class="tsd-index-section ">
 							<h3>Functions</h3>
 							<ul class="tsd-index-list">
+								<li class="tsd-kind-function tsd-has-type-parameter"><a href="modules.html#attempt" class="tsd-kind-icon">attempt</a></li>
 								<li class="tsd-kind-function tsd-has-type-parameter"><a href="modules.html#err" class="tsd-kind-icon">err</a></li>
+								<li class="tsd-kind-function tsd-has-type-parameter"><a href="modules.html#maybe" class="tsd-kind-icon">maybe</a></li>
 								<li class="tsd-kind-function tsd-has-type-parameter"><a href="modules.html#none" class="tsd-kind-icon">none</a></li>
 								<li class="tsd-kind-function tsd-has-type-parameter"><a href="modules.html#ok" class="tsd-kind-icon">ok</a></li>
 								<li class="tsd-kind-function tsd-has-type-parameter"><a href="modules.html#some" class="tsd-kind-icon">some</a></li>
@@ -220,6 +222,77 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Functions</h2>
 				<section class="tsd-panel tsd-member tsd-kind-function tsd-has-type-parameter">
+					<a name="attempt" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagConst">Const</span> attempt</h3>
+					<ul class="tsd-signatures tsd-kind-function tsd-has-type-parameter">
+						<li class="tsd-signature tsd-kind-icon">attempt&lt;T, E&gt;<span class="tsd-signature-symbol">(</span>fn<span class="tsd-signature-symbol">: </span><a href="modules.html#produce" class="tsd-signature-type" data-tsd-kind="Type alias">Produce</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="interfaces/result.html" class="tsd-signature-type" data-tsd-kind="Interface">Result</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">E</span><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Invokes a function that may throw an error and returns a <code>Result</code>.</p>
+								</div>
+								<p>The given function is invoked within a try/catch block. If an error is caught, it is returned
+									as an instance of <code>Err</code>. If no error is thrown, then the result is returned as an instance of
+								<code>Ok</code>.</p>
+								<blockquote>
+									<p>It is important to know that this function is unable to determine the proper type of the
+										thrown error. While the type defaults to the built-in JavaScript <code>Error</code> type, it is very
+									much encouraged that you specify the error type.</p>
+								</blockquote>
+								<pre><code class="language-ts"><span style="color: #008000">// A simple function that can throw an error.</span>
+<span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #795E26">throws</span><span style="color: #000000"> = (</span><span style="color: #001080">fail</span><span style="color: #000000">: </span><span style="color: #267F99">boolean</span><span style="color: #000000">) </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> {</span>
+<span style="color: #000000">  </span><span style="color: #AF00DB">if</span><span style="color: #000000"> (</span><span style="color: #001080">fail</span><span style="color: #000000">) {</span>
+<span style="color: #000000">    </span><span style="color: #AF00DB">throw</span><span style="color: #000000"> </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #267F99">Error</span><span style="color: #000000">(</span><span style="color: #A31515">&quot;An example error.&quot;</span><span style="color: #000000">);</span>
+<span style="color: #000000">  }</span>
+
+<span style="color: #000000">  </span><span style="color: #AF00DB">return</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;example&quot;</span><span style="color: #000000">;</span>
+<span style="color: #000000">};</span>
+
+<span style="color: #008000">// An example of the error being caught.</span>
+<span style="color: #0000FF">let</span><span style="color: #000000"> </span><span style="color: #001080">result</span><span style="color: #000000">: </span><span style="color: #267F99">Result</span><span style="color: #000000">&lt;</span><span style="color: #267F99">string</span><span style="color: #000000">, </span><span style="color: #267F99">Error</span><span style="color: #000000">&gt; = </span><span style="color: #795E26">attempt</span><span style="color: #000000">(() </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> </span><span style="color: #795E26">throws</span><span style="color: #000000">(</span><span style="color: #0000FF">true</span><span style="color: #000000">));</span>
+
+<span style="color: #795E26">assert</span><span style="color: #000000">(</span><span style="color: #001080">result</span><span style="color: #000000">.</span><span style="color: #795E26">isErr</span><span style="color: #000000">() === </span><span style="color: #0000FF">true</span><span style="color: #000000">);</span>
+
+<span style="color: #008000">// An example of the result being returned.</span>
+<span style="color: #001080">result</span><span style="color: #000000"> = </span><span style="color: #795E26">attempt</span><span style="color: #000000">(() </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> </span><span style="color: #795E26">throws</span><span style="color: #000000">(</span><span style="color: #0000FF">false</span><span style="color: #000000">));</span>
+
+<span style="color: #795E26">assert</span><span style="color: #000000">(</span><span style="color: #001080">result</span><span style="color: #000000">.</span><span style="color: #795E26">isOk</span><span style="color: #000000">() === </span><span style="color: #0000FF">true</span><span style="color: #000000">);</span>
+</code></pre>
+							</div>
+							<h4 class="tsd-type-parameters-title">Type parameters</h4>
+							<ul class="tsd-type-parameters">
+								<li>
+									<h4>T</h4>
+									<div class="tsd-comment tsd-typography">
+										<p>The type of the function&#39;s return value.</p>
+									</div>
+								</li>
+								<li>
+									<h4>E = <span class="tsd-signature-type">Error</span></h4>
+									<div class="tsd-comment tsd-typography">
+										<p>The type of the thrown value.</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>fn: <a href="modules.html#produce" class="tsd-signature-type" data-tsd-kind="Type alias">Produce</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The function to invoke.</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="interfaces/result.html" class="tsd-signature-type" data-tsd-kind="Interface">Result</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">E</span><span class="tsd-signature-symbol">&gt;</span></h4>
+							<p>A <code>Result</code> for the function return value.</p>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-function tsd-has-type-parameter">
 					<a name="err" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagConst">Const</span> err</h3>
 					<ul class="tsd-signatures tsd-kind-function tsd-has-type-parameter">
@@ -263,6 +336,52 @@
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Err</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">E</span><span class="tsd-signature-symbol">&gt;</span></h4>
+							<p>The instance.</p>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-function tsd-has-type-parameter">
+					<a name="maybe" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagConst">Const</span> maybe</h3>
+					<ul class="tsd-signatures tsd-kind-function tsd-has-type-parameter">
+						<li class="tsd-signature tsd-kind-icon">maybe&lt;T&gt;<span class="tsd-signature-symbol">(</span>value<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">None</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">unknown</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">Some</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Wraps a value as an <code>Option</code>.</p>
+								</div>
+								<p>This function provides a convenient way of wrapping the result of a function that could return
+									<code>null</code> or <code>undefined</code>. If <code>null</code> or <code>undefined</code> is given, an instance of <code>None</code> is returned. If
+								any other value is provided, including other falsy values, an instance of <code>Some</code> is returned.</p>
+								<pre><code class="language-ts"><span style="color: #0000FF">let</span><span style="color: #000000"> </span><span style="color: #001080">option</span><span style="color: #000000">: </span><span style="color: #267F99">Option</span><span style="color: #000000">&lt;</span><span style="color: #267F99">string</span><span style="color: #000000">&gt; = </span><span style="color: #795E26">maybe</span><span style="color: #000000">(</span><span style="color: #0000FF">null</span><span style="color: #000000">);</span>
+
+<span style="color: #795E26">assert</span><span style="color: #000000">(</span><span style="color: #001080">option</span><span style="color: #000000">.</span><span style="color: #795E26">isNone</span><span style="color: #000000">() === </span><span style="color: #0000FF">true</span><span style="color: #000000">);</span>
+
+<span style="color: #001080">option</span><span style="color: #000000"> = </span><span style="color: #795E26">maybe</span><span style="color: #000000">(</span><span style="color: #A31515">&quot;example&quot;</span><span style="color: #000000">);</span>
+
+<span style="color: #795E26">assert</span><span style="color: #000000">(</span><span style="color: #001080">option</span><span style="color: #000000">.</span><span style="color: #795E26">isSome</span><span style="color: #000000">() === </span><span style="color: #0000FF">true</span><span style="color: #000000">);</span>
+</code></pre>
+							</div>
+							<h4 class="tsd-type-parameters-title">Type parameters</h4>
+							<ul class="tsd-type-parameters">
+								<li>
+									<h4>T</h4>
+									<div class="tsd-comment tsd-typography">
+										<p>The type of the value.</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>value: <span class="tsd-signature-type">T</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">None</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">unknown</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">Some</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h4>
 							<p>The instance.</p>
 						</li>
 					</ul>
@@ -418,7 +537,13 @@
 						<a href="modules.html#produce" class="tsd-kind-icon">Produce</a>
 					</li>
 					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="modules.html#attempt" class="tsd-kind-icon">attempt</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
 						<a href="modules.html#err" class="tsd-kind-icon">err</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="modules.html#maybe" class="tsd-kind-icon">maybe</a>
 					</li>
 					<li class=" tsd-kind-function tsd-has-type-parameter">
 						<a href="modules.html#none" class="tsd-kind-icon">none</a>
